@@ -1,0 +1,61 @@
+tables: ['publisher', 'author', 'category', 'resource', 'resource_author', 'item', 'membership_type', 'member', 'loan', 'reservation', 'fine']
+
+>> -- Q1. Overdue books today (uses view)
+   (13, 'Prof. Rakesh Nair', 'Database System Concepts', 'PHYSICAL', '2026-11-05', 7, 7.0)
+   (21, 'Ananya Das', 'Five Point Someone', 'PHYSICAL', '2026-11-11', 1, 2.0)
+
+>> -- Q2. Overdue, same result without the view: members + contact to chase
+   ('Prof. Rakesh Nair', 'rakesh@example.com', 'Database System Concepts', '2026-11-05', 7)
+   ('Ananya Das', 'ananya@example.com', 'Five Point Someone', '2026-11-11', 1)
+
+>> -- Q3. Frequently borrowed resources (top 5)
+   ('Database System Concepts', 'PHYSICAL', 'Databases', 6)
+   ('Fundamentals of Database Systems', 'PHYSICAL', 'Databases', 3)
+   ('Designing Data-Intensive Apps (e-book)', 'DIGITAL', 'Databases', 2)
+   ('Five Point Someone', 'PHYSICAL', 'Fiction', 2)
+   ('Half Girlfriend', 'PHYSICAL', 'Fiction', 2)
+
+>> -- Q4. Members with unpaid fines
+   (3, 'Rohan Gupta', 75.0)
+   (5, 'Karan Verma', 54.0)
+
+>> -- Q5. CTE: monthly circulation with running total
+   ('2026-08', 3, 3)
+   ('2026-09', 6, 9)
+   ('2026-10', 12, 21)
+   ('2026-11', 4, 25)
+
+>> -- Q6. CTE: most borrowed resource in each category
+   ('Algorithms', 'Introduction to Algorithms', 2)
+   ('Biography', 'Wings of Fire', 2)
+   ('Databases', 'Database System Concepts', 6)
+   ('Fiction', 'Five Point Someone', 2)
+   ('Fiction', 'Half Girlfriend', 2)
+   ('Operating Systems', 'Modern Operating Systems', 1)
+   ('Software Engineering', 'Clean Code', 1)
+
+>> -- Q7. CTE: late-return behaviour per membership type
+   ('Student', 14, 4, 28.6, 8.5)
+   ('Faculty', 8, 0, 0.0, None)
+   ('Public', 3, 3, 100.0, 7.7)
+
+>> -- Q8. Physical vs digital usage
+   ('DIGITAL', 5)
+   ('PHYSICAL', 20)
+
+>> -- Q9. Resources never borrowed (collection review)
+   ('Computer Networks',)
+
+>> -- Q10. Reservations waiting where no copy is available
+   (2, 'Karan Verma', 'Half Girlfriend')
+
+>> -- Q11. Repeat borrowers (3+ loans) - CTE
+   ('Dr. Meera Iyer', 5)
+   ('Simran Kaur', 5)
+   ('Karan Verma', 5)
+   ('Ananya Das', 4)
+   ('Rohan Gupta', 3)
+   ('Prof. Rakesh Nair', 3)
+
+>> -- Q12. Proof the index is used for the overdue search
+   (2, 0, 0, 'SEARCH loan USING COVERING INDEX idx_loan_return_due (return_date=? AND due_date<?)')

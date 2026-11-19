@@ -1,0 +1,94 @@
+erDiagram
+    PUBLISHER ||--o{ RESOURCE : publishes
+    CATEGORY ||--o{ RESOURCE : classifies
+    RESOURCE ||--o{ RESOURCE_AUTHOR : has
+    AUTHOR ||--o{ RESOURCE_AUTHOR : writes
+    RESOURCE ||--o{ ITEM : "has copies or licences"
+    RESOURCE ||--o{ RESERVATION : "is reserved in"
+    MEMBERSHIP_TYPE ||--o{ MEMBER : defines
+    MEMBER ||--o{ LOAN : borrows
+    ITEM ||--o{ LOAN : "is lent in"
+    MEMBER ||--o{ RESERVATION : places
+    LOAN ||--o| FINE : "may incur"
+
+    PUBLISHER {
+        int publisher_id PK
+        string name UK
+        string city
+        string email UK
+    }
+    AUTHOR {
+        int author_id PK
+        string first_name
+        string last_name
+        string country
+    }
+    CATEGORY {
+        int category_id PK
+        string name UK
+    }
+    RESOURCE {
+        int resource_id PK
+        string title
+        string isbn UK
+        string resource_type
+        int publisher_id FK
+        int category_id FK
+        int publication_year
+        string language
+    }
+    RESOURCE_AUTHOR {
+        int resource_id PK
+        int author_id PK
+        int author_order
+    }
+    ITEM {
+        int item_id PK
+        int resource_id FK
+        string barcode UK
+        string access_url UK
+        string shelf_location
+        string status
+    }
+    MEMBERSHIP_TYPE {
+        int type_id PK
+        string type_name UK
+        int max_loans
+        int loan_days
+        float fine_per_day
+        float annual_fee
+    }
+    MEMBER {
+        int member_id PK
+        string full_name
+        string email UK
+        string phone UK
+        date join_date
+        date expiry_date
+        int type_id FK
+        string status
+    }
+    LOAN {
+        int loan_id PK
+        int member_id FK
+        int item_id FK
+        date issue_date
+        date due_date
+        date return_date
+    }
+    RESERVATION {
+        int reservation_id PK
+        int member_id FK
+        int resource_id FK
+        date reserved_on
+        date expires_on
+        string status
+    }
+    FINE {
+        int fine_id PK
+        int loan_id FK
+        int days_late
+        float amount
+        date assessed_on
+        date paid_on
+    }
